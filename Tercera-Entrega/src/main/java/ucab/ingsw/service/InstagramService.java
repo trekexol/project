@@ -5,13 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import ucab.ingsw.command.InstagramUrlsCommand;
 import org.springframework.web.client.RestTemplate;
+import ucab.ingsw.dataApis.instagramData.InstagramDataUrls;
+import ucab.ingsw.dataApis.instagramData.InstagramUrl;
 import ucab.ingsw.repository.*;
 import ucab.ingsw.response.NotifyResponse;
-import ucab.ingsw.dataApis.*;
-import ucab.ingsw.response.InstagramUrlsResponse;
-import ucab.ingsw.service.UserService;
+import ucab.ingsw.response.MediaUrlsResponse;
 import ucab.ingsw.model.User;
 
 import java.time.LocalDateTime;
@@ -40,7 +39,7 @@ public class InstagramService {
             User u = userService.searchUserById(id);
             String addressApi = "https://api.instagram.com/v1/tags/"+instagramTag+"/media/recent?access_token="+u.getInstagramToken();
             List<String> instagramUrls = new ArrayList<>();
-            List<InstaData> dataPackage;
+            List<InstagramDataUrls> dataPackage;
             RestTemplate restTemplate = new RestTemplate();
             InstagramUrl instagramInfo = restTemplate.getForObject(addressApi, InstagramUrl.class);
             dataPackage = instagramInfo.getData();
@@ -52,7 +51,7 @@ public class InstagramService {
             else {
                 log.info("Search has been successfull");
 
-                InstagramUrlsResponse instagramResponse = new InstagramUrlsResponse();
+                MediaUrlsResponse instagramResponse = new MediaUrlsResponse();
                 dataPackage.forEach(i -> {
                     instagramUrls.add(i.getImages().getStandard_resolution().getUrl());
                 });

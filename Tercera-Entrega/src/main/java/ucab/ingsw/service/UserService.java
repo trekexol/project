@@ -153,9 +153,9 @@ public class UserService {
             return  ResponseEntity.ok().body(buildNotifyResponse("La operación ha sido exitosa."));
 
         } else {
-            log.info("Cannot find user with Id={}", id);
+            log.info("Cannot find user with Item={}", id);
 
-            return ResponseEntity.badRequest().body(buildNotifyResponse("Id no válido."));
+            return ResponseEntity.badRequest().body(buildNotifyResponse("Item no válido."));
             }
         }
 
