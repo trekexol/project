@@ -39,13 +39,21 @@ public class UserSignUpCommand implements Serializable {
     @Size(min = ValidationRules.PASSWORD_MIN_SIZE, message = "La contraseña debe poseer al menos 8 caracteres.")
     private String confirmationPassword;
 
-    @NotNull(message = "Por favor, introduzca un token de Instagram.")
-    @NotEmpty(message = "Por favor, introduzca un token de Instagram.")
-    private String tokenInstagram;
+
 
  @NotNull(message = "Por favor, introduzca una fecha de nacimiento.")
  @NotEmpty(message = "Por favor, introduzca una fecha de nacimiento.")
  private String dateOfBirth;
+
+ @NotNull(message = "Por favor, introduzca un token de Instagram.")
+ @NotEmpty(message = "Por favor, introduzca un token de Instagram.")
+ private String tokenInstagram;
+
+ @NotNull(message = "Por favor, introduzca un canal de Youtube.")
+ @NotEmpty(message = "Por favor, introduzca un canal de Youtube.")
+ private String channelYoutube;
+
+
 
  public String getFirstName() {
   return firstName;
@@ -93,5 +101,13 @@ public class UserSignUpCommand implements Serializable {
 
  public void setDateOfBirth(String dateOfBirth) {
   this.dateOfBirth = dateOfBirth;
+ }
+
+ public String getChannelYoutube() {
+  return channelYoutube;
+ }
+
+ public void setChannelYoutube(String channelYoutube) {
+  this.channelYoutube = channelYoutube;
  }
 }

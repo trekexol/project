@@ -20,7 +20,7 @@ import java.util.*;
 
 @Slf4j
 @Service("InstagramService")
-public class InstagramService {
+public class InstagramService  {
 
     @Autowired
     private UserRepository userRepository;
@@ -59,6 +59,32 @@ public class InstagramService {
                 return ResponseEntity.ok(instagramResponse);
             }
         }
+
+    public boolean searchTag2(String id, String instagramTag){
+        User u = userService.searchUserById(id);
+        if (u==null) return false;
+        String addressApi = "https://api.instagram.com/v1/tags/"+instagramTag+"/media/recent?access_token="+u.getInstagramToken();
+        List<String> instagramUrls = new ArrayList<>();
+        List<InstagramDataUrls> dataPackage;
+        RestTemplate restTemplate = new RestTemplate();
+        InstagramUrl instagramInfo = restTemplate.getForObject(addressApi, InstagramUrl.class);
+        dataPackage = instagramInfo.getData();
+        if(dataPackage.isEmpty()){
+            log.info("Search has not been sucessfull");
+
+            return false;
+        }
+        else {
+            log.info("Search has been successfull");
+
+            MediaUrlsResponse instagramResponse = new MediaUrlsResponse();
+            dataPackage.forEach(i -> {
+                instagramUrls.add(i.getImages().getStandard_resolution().getUrl());
+            });
+            instagramResponse.setUrls(instagramUrls);
+            return true;
+        }
+    }
 
     }
 

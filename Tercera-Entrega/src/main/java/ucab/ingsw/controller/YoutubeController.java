@@ -27,4 +27,9 @@ public class YoutubeController {
     public ResponseEntity getUrls(@Valid @RequestBody GeneralYoutubeCommand command) {
         return youtubeService.searchGeneral(command.getSearchTerm());
     }
+
+    @RequestMapping(value = "/youtube/{id}", method = RequestMethod.GET)
+    public ResponseEntity search(@PathVariable("id") String id) {
+        return youtubeService.searchChannelUrls(id);
+    }
 }
