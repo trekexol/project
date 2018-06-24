@@ -87,6 +87,7 @@ public class UserService {
                 user.setPassword(command.getPassword());
                 user.setDateOfBirth(command.getDateOfBirth());
                 user.setInstagramToken(command.getTokenInstagram());
+                user.setYoutubeChannelId(command.getChannelYoutube());
                 user.setAlbums(null);
                 user.setFriends(null);
                 userRepository.save(user);
@@ -116,6 +117,7 @@ public class UserService {
             user.setEmail(command.getEmail());
             user.setPassword(command.getPassword());
             user.setDateOfBirth(command.getDateOfBirth());
+
             userRepository.save(user);
 
             log.info("Updated user with ID={}", user.getId());
@@ -182,6 +184,18 @@ public class UserService {
                 return null;
         } catch (NumberFormatException e) {
             return null;
+        }
+    }
+
+    public Boolean doNotSearchUserById(String id) {
+        try {
+            if(userRepository.findById(Long.parseLong(id)).isPresent()){
+                return true;
+            }
+            else
+                return null;
+        } catch (NumberFormatException e) {
+            return false;
         }
     }
 

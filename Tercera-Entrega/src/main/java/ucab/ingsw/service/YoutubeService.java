@@ -13,6 +13,7 @@ import ucab.ingsw.response.NotifyResponse;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import ucab.ingsw.model.User;
 
 
 @Slf4j
@@ -54,6 +55,31 @@ public class YoutubeService {
             });
             youtubeResponse.setUrls(youtubeUrls);
             return ResponseEntity.ok(youtubeResponse);
+        }
+    }
+
+    public ResponseEntity<Object> searchChannelUrls(String id){
+        User u = userService.searchUserById(id);
+        String addressApi = "https://www.googleapis.com/youtube/v3/search?part=snippet&channelId="+u.getYoutubeChannelId()+"&maxResults=50&key=AIzaSyBnZJwOtyGQZtE5epo1MR-fYht1p6XW1V8";
+        List<String> youtubeUrls = new ArrayList<>();
+        List<YoutubeDataUrls> dataPackage;
+        RestTemplate restTemplate = new RestTemplate();
+        YoutubeUrl instagramInfo = restTemplate.getForObject(addressApi, YoutubeUrl.class);
+        dataPackage = instagramInfo.getItems();
+        if(dataPackage.isEmpty()){
+            log.info("Search has not been sucessfull");
+
+            return ResponseEntity.badRequest().body(buildNotifyResponse("no_result."));
+        }
+        else {
+            log.info("Search has been successfull");
+
+            MediaUrlsResponse instagramResponse = new MediaUrlsResponse();
+            dataPackage.forEach(i -> {
+                youtubeUrls.add("https://www.youtube.com/watch?v="+i.getId().getVideoId());
+            });
+            instagramResponse.setUrls(youtubeUrls);
+            return ResponseEntity.ok(instagramResponse);
         }
     }
 
