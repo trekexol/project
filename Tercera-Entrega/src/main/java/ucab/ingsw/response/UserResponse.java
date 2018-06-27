@@ -3,16 +3,96 @@ package ucab.ingsw.response;
 import lombok.Data;
 import lombok.ToString;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Data
 @ToString
 public class UserResponse {
-    private Long id;
-    private String firstName;    //OBJECTO QUE SE ENVÍA COMO RESPUESTA PARA LOS PROCESOS DEL USUARIO QUE
-    private String lastName;     //NO TIENEN QUE VER CON EL PERFIL DEL USUARIO
+    private long id;
+
+    private String firstName;
+    private String lastName;
     private String email;
+    private String password;
     private String dateOfBirth;
     private String instagramToken;
+    private String youtubeChannelId;
+    private List<Long> albums = new ArrayList<>();
+    private List<Long> friends = new ArrayList<>();
+
+    public String getYoutubeChannelId() {
+        return youtubeChannelId;
+    }
+
+    public void setYoutubeChannelId(String youtubeChannelId) {
+        this.youtubeChannelId = youtubeChannelId;
+    }
+
+    public List<Long> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(List<Long> friends) {
+        this.friends = friends;
+    }
+
+    public List<Long> getAlbums() {
+        return albums;
+    }
+
+    public void setAlbums(List<Long> albums) {
+        this.albums = albums;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getDateOfBirth() {
+        return dateOfBirth;
+    }
 
     public String getInstagramToken() {
         return instagramToken;
@@ -20,45 +100,5 @@ public class UserResponse {
 
     public void setInstagramToken(String instagramToken) {
         this.instagramToken = instagramToken;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(String dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 }
