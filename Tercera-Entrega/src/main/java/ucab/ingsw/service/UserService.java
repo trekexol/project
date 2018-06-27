@@ -1,8 +1,9 @@
 package ucab.ingsw.service;
 
-import ucab.ingsw.command.AddFriendCommand;
+import ucab.ingsw.command.FriendCommand;
 import ucab.ingsw.command.UserSignUpCommand;
 import ucab.ingsw.command.UserLoginCommand;
+import ucab.ingsw.command.UserDeleteCommand;
 import ucab.ingsw.command.UserChangingAttributesCommand;
 import ucab.ingsw.model.User;
 import ucab.ingsw.response.UserResponse;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ucab.ingsw.response.NotifyResponse;
 import ucab.ingsw.repository.UserRepository;
+import java.util.ArrayList;
 
 import java.time.LocalDateTime;
 
@@ -29,7 +31,7 @@ public class UserService {
 
 
     //-----------------------------------------------------------------------------------------------------------
-
+    //SERVICIO PARA ACCEDER A LA RED SOCIAL
     public ResponseEntity<Object> login(UserLoginCommand command) {
         log.debug("About to process [{}]", command);
         User u = userRepository.findFirstByEmailIgnoreCaseContaining(command.getEmail());
@@ -40,8 +42,6 @@ public class UserService {
         } else {
             if (u.getPassword().equals(command.getPassword())) {
                   log.info("Successful login for user={}", u.getId());
-
-
 
                 UserResponse respuesta = new UserResponse();
                 respuesta.setFirstName(u.getFirstName());
@@ -63,9 +63,9 @@ public class UserService {
 
 
 //-----------------------------------------------------------------------------------------------------------
+    //SERVICIO PARA REGISTRAR USUARIO
 
-
-    public ResponseEntity<Object> register(UserSignUpCommand command) { //SE ENCARGA DE REGISTRAR TODOS LOS USUARIOS
+    public ResponseEntity<Object> register(UserSignUpCommand command) {
         log.debug("About to be processed [{}]", command);
 
         if (userRepository.existsByEmail(command.getEmail())) {
@@ -86,8 +86,6 @@ public class UserService {
                 user.setEmail(command.getEmail());
                 user.setPassword(command.getPassword());
                 user.setDateOfBirth(command.getDateOfBirth());
-                user.setInstagramToken(command.getTokenInstagram());
-                user.setYoutubeChannelId(command.getChannelYoutube());
                 user.setAlbums(null);
                 user.setFriends(null);
                 userRepository.save(user);
@@ -101,7 +99,7 @@ public class UserService {
 
     //-----------------------------------------------------------------------------------------------------------
 
-
+    //SERVICIO PARA ACTUALIZAR USUARIO
 
     public ResponseEntity<Object> update(UserChangingAttributesCommand command, String id) {
         log.debug("About to process [{}]", command);
@@ -111,13 +109,13 @@ public class UserService {
         } else {
             User user = new User();
 
-            user.setId(Long.parseLong(id));
             user.setFirstName(command.getFirstName());
             user.setLastName(command.getLastName());
             user.setEmail(command.getEmail());
             user.setPassword(command.getPassword());
             user.setDateOfBirth(command.getDateOfBirth());
-
+            user.setInstagramToken(command.getTokenInstagram());
+            user.setYoutubeChannelId(command.getChannelYoutube());
             userRepository.save(user);
 
             log.info("Updated user with ID={}", user.getId());
@@ -135,36 +133,31 @@ public class UserService {
         List<User> u = userRepository.findByFirstNameIgnoreCaseContaining(name);
         if(u==null){
             log.info("No se encontraros usuarios con el nombre : ",name);
-
         }else
         log.info("Cantidad de Usuarios encontrados={}", u.size(), name);
-
-
-
         return u;
     }
 
     //-----------------------------------------------------------------------------------------------------------
-
-    public ResponseEntity<Object> delete(String id) {
+    //SERVICIO PARA ELIMINAR USUARIO
+    public ResponseEntity<Object> delete(UserDeleteCommand command, String id) {
         log.debug("About to process [{}]");
 
         if (userRepository.existsById(Long.parseLong(id))) {
-
+           User u = searchUserById(id);
+           if (command.getPassword().equals(u.getPassword())){
             userRepository.deleteById(Long.parseLong(id));
-            return  ResponseEntity.ok().body(buildNotifyResponse("La operación ha sido exitosa."));
+            return  ResponseEntity.ok().body(buildNotifyResponse("La operación ha sido exitosa."));}
+            else{
+               return  ResponseEntity.ok().body(buildNotifyResponse("Las contraseñas no son iguales."));
+        }
 
-        } else {
+    } else {
             log.info("Cannot find user with Item={}", id);
 
             return ResponseEntity.badRequest().body(buildNotifyResponse("Item no válido."));
             }
         }
-
-
-
-
-
 
     //-----------------------------------------------------------------------------------------------------------
 
@@ -175,6 +168,8 @@ public class UserService {
         return respuesta;
     }
     //-----------------------------------------------------------------------------------------------------------
+    //SERVICIO PARA BUSCAR USUARIO POR ID
+
     public User searchUserById(String id) {
         try {
             if(userRepository.findById(Long.parseLong(id)).isPresent()){
@@ -186,7 +181,19 @@ public class UserService {
             return null;
         }
     }
-
+    //-----------------------------------------------------------------------------------------------------------
+    public Long searchUserById2(String id) {
+        try {
+            if(userRepository.findById(Long.parseLong(id)).isPresent()){
+                return userRepository.findById(Long.parseLong(id)).get().getId();
+            }
+            else
+                return null;
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+    //-----------------------------------------------------------------------------------------------------------
     public Boolean doNotSearchUserById(String id) {
         try {
             if(userRepository.findById(Long.parseLong(id)).isPresent()){
@@ -198,8 +205,9 @@ public class UserService {
             return false;
         }
     }
-
-    public ResponseEntity<Object> addFriend(AddFriendCommand command) {
+    //-----------------------------------------------------------------------------------------------------------
+    //SERVICIO PARA AGREGAR AMIGO
+    public ResponseEntity<Object> addFriend(FriendCommand command) {
         log.debug("About to process [{}]", command);
         if (!userRepository.existsById(Long.parseLong(command.getId())) || !userRepository.existsById(Long.parseLong(command.getIdFriend()))) {
             log.info("Cannot find user with ID={}");
@@ -211,17 +219,51 @@ public class UserService {
             User friend = searchUserById(command.getIdFriend());
             user.getFriends().add(Long.parseLong(command.getIdFriend()));
             friend.getFriends().add(Long.parseLong(command.getId()));
-
          userRepository.save(user);
          userRepository.save(friend);
-
             log.info("Updated user with ID={}", user.getId());
-
             return ResponseEntity.ok().body(buildNotifyResponse("La operación ha sido exitosa."));}
             else {
                return ResponseEntity.badRequest().body(buildNotifyResponse("La contraseña no pertenece al usuario."));
         }
         }
+    }
+
+    public ResponseEntity<Object> getFriendsList(String id){
+        User user = searchUserById(id);
+        if (!(userRepository.existsById(Long.parseLong(id)))) {
+            log.info("NO SE HA PODIDO HALLAR AL USUARIO CON EL ID:", id);
+            return ResponseEntity.badRequest().body(buildNotifyResponse("ID NO VÁLIDO."));
+        }
+        else{
+            List<UserResponse> friendList = createFriendList(user);
+            if(friendList.isEmpty()){
+                log.info("LA LISTA DE AMIGOS DEL USUARIO SE ENCUENTRA VACÍA.");
+
+                return ResponseEntity.ok().body(buildNotifyResponse("LA LISTA NO POSEE AMIGOS."));
+            }
+            else{
+                log.info("RETORNANDO LA LISTA DE AMIGOS PARA EL USUARIO CON ID={}", id);
+                return ResponseEntity.ok(friendList);
+            }
+        }
+    }
+
+    public List<UserResponse> createFriendList(User user) {
+        List<UserResponse> friendList = new ArrayList<>();
+        List<Long> friendIdList = user.getFriends();
+        userRepository.findAll().forEach(it->{
+            if(friendIdList.stream().anyMatch(item -> item == it.getId())){
+                UserResponse normalResponse = new UserResponse();
+                normalResponse.setId(it.getId());
+                normalResponse.setFirstName(it.getFirstName());
+                normalResponse.setLastName(it.getLastName());
+                normalResponse.setEmail(it.getEmail());
+                normalResponse.setDateOfBirth(it.getDateOfBirth());
+                friendList.add(normalResponse);
+            }
+        });
+        return friendList;
     }
 
 }

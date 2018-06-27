@@ -35,7 +35,8 @@ public class YoutubeService {
             response.setTimestamp(LocalDateTime.now());
             return response;
         }
-
+    //-----------------------------------------------------------------------------------------------------------
+    // SERVICIO DE BÚSQUEDA GENERAL
     public ResponseEntity<Object> searchGeneral(String termino){
         String addressApi= "https://www.googleapis.com/youtube/v3/search?part=snippet&q="+termino+"&key=AIzaSyBnZJwOtyGQZtE5epo1MR-fYht1p6XW1V8";
         List<String> youtubeUrls = new ArrayList<>();
@@ -57,7 +58,8 @@ public class YoutubeService {
             return ResponseEntity.ok(youtubeResponse);
         }
     }
-
+    //-----------------------------------------------------------------------------------------------------------
+    // SERVICIO DE BÚSQUEDA POR CANAL DE YOUTUBE
     public ResponseEntity<Object> searchChannelUrls(String id){
         User u = userService.searchUserById(id);
         String addressApi = "https://www.googleapis.com/youtube/v3/search?part=snippet&channelId="+u.getYoutubeChannelId()+"&maxResults=50&key=AIzaSyBnZJwOtyGQZtE5epo1MR-fYht1p6XW1V8";
