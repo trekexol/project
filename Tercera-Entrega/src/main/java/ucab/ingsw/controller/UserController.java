@@ -14,6 +14,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import ucab.ingsw.command.UserLoginCommand;
+import ucab.ingsw.command.FriendListCommand;
 
 @Slf4j
 
@@ -43,8 +44,8 @@ public class UserController {
     }
 
     @RequestMapping(value = "/delete/{id}", consumes = "application/json", method = RequestMethod.DELETE)
-    public ResponseEntity delete(@PathVariable("id") String id) {
-        return userService.delete(id);
+    public ResponseEntity delete(@Valid @RequestBody UserDeleteCommand command,@PathVariable("id") String id) {
+        return userService.delete(command, id);
     }
 
    @RequestMapping(value = "/search/{firstName}", consumes = "application/json", method = RequestMethod.GET)
@@ -53,10 +54,14 @@ public class UserController {
     }
 
     @RequestMapping(value = "/add/friend", consumes = "application/json", method = RequestMethod.POST)
-    public ResponseEntity<Object> addFriend(@Valid @RequestBody AddFriendCommand command) {
+    public ResponseEntity<Object> addFriend(@Valid @RequestBody FriendCommand command) {
         return userService.addFriend(command);
     }
 
+    @RequestMapping(value = "/friendsList", consumes = "application/json", method = RequestMethod.POST)
+    public ResponseEntity<Object> getFriendsList(@Valid @RequestBody FriendListCommand command) {
+        return userService.getFriendsList(command.getId());
+    }
 
 }
 
