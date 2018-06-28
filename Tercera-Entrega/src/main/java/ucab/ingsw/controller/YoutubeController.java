@@ -22,7 +22,6 @@ public class YoutubeController {
 
      @RequestMapping(value = "/youtube/general", consumes = "application/json", method = RequestMethod.GET)
     public ResponseEntity getUrls(@RequestParam("query") String command) {
-        command = command.replace(" ", "+");
         return youtubeService.searchGeneral(command);
     }
 
