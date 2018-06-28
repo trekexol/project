@@ -11,11 +11,15 @@ https://ing-software2018.herokuapp.com/search/spotify/"???"/?query="TÉRMINO_DE_
 
 -----------------------------------YOUTUBE------------------------------------------------
 -------------------------2 URLS PARA EXTRAER INFORMACIÓN----------------------------------
---------------------------------DOS MÉTODOS TIPO GET -------------------------------------
+---------------------UN MÉTODO TIPO GET Y UN MÉTODO TIPO POST-----------------------------
 
-https://ing-software2018.herokuapp.com/youtube/general/?query="TÉRMINO_DE_BÚSQUEDA"
+TIPO POST:
+https://ing-software2018.herokuapp.com/youtube/general
 
-MUESTRA LOS PRIMEROS VÍDEOS RELACIONADOS CON EL TÉRMINO DE BÚSQUEDA EN ORDEN DE RELEVANCIA POR DEFAULT
+CUERPO DEL POST:
+    {
+       "searchTerm" : "TÉRMINO_DE_BÚSQUEDA"
+    }
 
 TIPO GET:
 https://ing-software2018.herokuapp.com/youtube/{id} id= ID DEL USUARIO
