@@ -86,6 +86,8 @@ public class UserService {
                 user.setEmail(command.getEmail());
                 user.setPassword(command.getPassword());
                 user.setDateOfBirth(command.getDateOfBirth());
+                user.setInstagramToken(command.getTokenInstagram());
+                user.setYoutubeChannelId(command.getChannelYoutube());
                 user.setAlbums(null);
                 user.setFriends(null);
                 userRepository.save(user);
