@@ -21,12 +21,12 @@ public class YoutubeController {
     @Autowired
     private YoutubeService youtubeService;
 
-
-
-    @RequestMapping(value = "/youtube/general", consumes = "application/json", method = RequestMethod.POST)
-    public ResponseEntity getUrls(@Valid @RequestBody GeneralYoutubeCommand command) {
-        return youtubeService.searchGeneral(command.getSearchTerm());
+     @RequestMapping(value = "/youtube/general", consumes = "application/json", method = RequestMethod.GET)
+    public ResponseEntity getUrls(@RequestParam("query") String command) {
+        command = command.replace(" ", "+");
+        return youtubeService.searchGeneral(command);
     }
+
 
     @RequestMapping(value = "/youtube/{id}", method = RequestMethod.GET)
     public ResponseEntity search(@PathVariable("id") String id) {
