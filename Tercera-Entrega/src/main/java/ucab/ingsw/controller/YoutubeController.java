@@ -10,7 +10,6 @@ import ucab.ingsw.service.YoutubeService;
 
 import javax.validation.Valid;
 
-@Slf4j
 
 @CrossOrigin
 @RestController
