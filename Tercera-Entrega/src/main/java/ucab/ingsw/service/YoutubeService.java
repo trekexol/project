@@ -37,7 +37,7 @@ public class YoutubeService {
         }
     //-----------------------------------------------------------------------------------------------------------
     // SERVICIO DE BÚSQUEDA GENERAL
-    public ResponseEntity searchGeneral(String termino){
+    public ResponseEntity<Object> searchGeneral(String termino){
         String addressApi= "https://www.googleapis.com/youtube/v3/search?part=snippet&q="+termino+"&key=AIzaSyBnZJwOtyGQZtE5epo1MR-fYht1p6XW1V8";
         List<String> youtubeUrls = new ArrayList<>();
         List<YoutubeDataUrls> dataPackage;
