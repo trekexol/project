@@ -1,0 +1,30 @@
+SERVICIOS DE APIS 
+-----------------------------------SPOTIFY------------------------------------------------
+------------------------3 URLS PARA EXTRAER INFORMACIÓN-----------------------------------
+-----------------------LOS 3 MÉTODOS SON REQUESTS TIPO GET--------------------------------
+
+https://ing-software2018.herokuapp.com/search/spotify/"???"/?query="TÉRMINO_DE_BÚSQUEDA"
+
+"???" = tracks (MUESTRA LAS TRACKS CON INFORMACIÓN DETALLADA)
+      = urls (MUESTRA LOS URLS DE LOS TRACKS DE MANERA SIMPLIFICADA)
+      = artists (MUESTRA LOS URLS DE LOS ARTISTAS QUE POSEEN COMO NOMBRE PARCIAL O COMPLETO EL TÉRMINO DE BÚSQUEDA)
+
+-----------------------------------YOUTUBE------------------------------------------------
+-------------------------2 URLS PARA EXTRAER INFORMACIÓN----------------------------------
+--------------------------------DOS MÉTODOS TIPO GET -------------------------------------
+
+https://ing-software2018.herokuapp.com/youtube/general/?query="TÉRMINO_DE_BÚSQUEDA"
+
+MUESTRA LOS PRIMEROS VÍDEOS RELACIONADOS CON EL TÉRMINO DE BÚSQUEDA EN ORDEN DE RELEVANCIA POR DEFAULT
+
+TIPO GET:
+https://ing-software2018.herokuapp.com/youtube/{id} id= ID DEL USUARIO
+
+MUESTRA LOS URLS DE LOS VÍDEOS DEL CANAL DEL USUARIO
+
+-----------------------INSTAGRAM-----------------------------------------------------------
+------------------1 URL PARA EXTRAER INFORMACIÓN-------------------------------------------
+
+https://ing-software2018.herokuapp.com/search/instagram/ID_DEL_USUARIO/?query="TÉRMINO_DE_BÚSQUEDA"
+
+MUESTRA LOS URLS DE LAS IMÁGENES DE LA CUENTA DEL USUARIO
