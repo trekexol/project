@@ -19,10 +19,10 @@ public class YoutubeController {
 
     @Autowired
     private YoutubeService youtubeService;
-
-     @RequestMapping(value = "/youtube/general", consumes = "application/json", method = RequestMethod.GET)
-    public ResponseEntity getUrls(@RequestParam("query") String command) {
-        return youtubeService.searchGeneral(command);
+   
+    @RequestMapping(value = "/youtube/general", consumes = "application/json", method = RequestMethod.POST)
+    public ResponseEntity getUrls(@Valid @RequestBody GeneralYoutubeCommand command) {
+        return youtubeService.searchGeneral(command.getSearchTerm());
     }
 
 
