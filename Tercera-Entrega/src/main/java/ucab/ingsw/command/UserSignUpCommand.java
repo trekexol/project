@@ -46,6 +46,16 @@ public class UserSignUpCommand implements Serializable {
  private String dateOfBirth;
 
 
+@NotNull(message = "Por favor, introduzca un token de Instagram.")
+ @NotEmpty(message = "Por favor, introduzca un token de Instagram.")
+ private String tokenInstagram;
+
+ @NotNull(message = "Por favor, introduzca un canal de Youtube.")
+ @NotEmpty(message = "Por favor, introduzca un canal de Youtube.")
+ private String channelYoutube;
+
+
+
  public String getFirstName() {
   return firstName;
  }
@@ -94,4 +104,11 @@ public class UserSignUpCommand implements Serializable {
   this.dateOfBirth = dateOfBirth;
  }
 
+ public String getChannelYoutube() {
+  return channelYoutube;
+ }
+
+ public void setChannelYoutube(String channelYoutube) {
+  this.channelYoutube = channelYoutube;
+ }
 }
