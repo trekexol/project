@@ -1,0 +1,7 @@
+-REQUEST TIPO GET
+
+-http://ing-software2018.herokuapp.com/search/apis/?query="searchTerm"&id="id_del_usuario"
+
+-RETORNA EL CONTENIDO DE LAS TRES APIS
+
+-"searchTerm"= término de búsqueda. La id del usuario es requerida para poder acceder a una cuenta privada de Instagram
