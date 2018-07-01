@@ -95,10 +95,15 @@ public class AlbumService {
         albumRepository.findAll().forEach(it->{
             if(albumIdList.stream().anyMatch(item -> item == it.getId())){
                 AlbumResponse albumResponse = new AlbumResponse();
-                albumResponse.setId(it.getId());
+                albumResponse.setId(String.valueOf(it.getId()));
                 albumResponse.setName(it.getNombreAlbum());
                 albumResponse.setDescription(it.getDescripcion());
-                albumResponse.setMedia(it.getMedia());
+                List<String> media = new ArrayList<>();
+                it.getMedia().forEach( j->{
+                           media.add(j.toString());
+                        }
+                );
+                albumResponse.setMedia(media);
                 albumList.add(albumResponse);
             }
         });

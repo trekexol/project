@@ -47,7 +47,7 @@ public class UserService {
                 respuesta.setFirstName(u.getFirstName());
                 respuesta.setLastName(u.getLastName());
                 respuesta.setEmail(u.getEmail());
-                respuesta.setId(u.getId());
+                respuesta.setId(String.valueOf(u.getId()));
                 respuesta.setInstagramToken(u.getInstagramToken());
                 respuesta.setDateOfBirth(u.getDateOfBirth());
 
@@ -241,7 +241,6 @@ public class UserService {
             List<UserResponse> friendList = createFriendList(user);
             if(friendList.isEmpty()){
                 log.info("LA LISTA DE AMIGOS DEL USUARIO SE ENCUENTRA VACÍA.");
-
                 return ResponseEntity.ok().body(buildNotifyResponse("LA LISTA NO POSEE AMIGOS."));
             }
             else{
@@ -257,7 +256,7 @@ public class UserService {
         userRepository.findAll().forEach(it->{
             if(friendIdList.stream().anyMatch(item -> item == it.getId())){
                 UserResponse normalResponse = new UserResponse();
-                normalResponse.setId(it.getId());
+                normalResponse.setId(String.valueOf(it.getId()));
                 normalResponse.setFirstName(it.getFirstName());
                 normalResponse.setLastName(it.getLastName());
                 normalResponse.setEmail(it.getEmail());
@@ -265,8 +264,18 @@ public class UserService {
                 normalResponse.setDateOfBirth(it.getDateOfBirth());
                 normalResponse.setInstagramToken(it.getInstagramToken());
                 normalResponse.setYoutubeChannelId(it.getYoutubeChannelId());
-                normalResponse.setFriends(it.getFriends());
-                normalResponse.setAlbums(it.getAlbums());
+                List<String> albumes = new ArrayList<>();
+                it.getAlbums().forEach( j->{
+                            albumes.add(j.toString());
+                        }
+                );
+                List<String> friends = new ArrayList<>();
+                it.getFriends().forEach( j->{
+                            friends.add(j.toString());
+                        }
+                );
+                normalResponse.setFriends(friends);
+                normalResponse.setAlbums(albumes);
                 friendList.add(normalResponse);
             }
         });
