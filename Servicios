@@ -1,0 +1,19 @@
+-REQUEST TIPO GET (BÚSQUEDA DE LAS APIS)
+-http://ing-software2018.herokuapp.com/search/apis/?query="searchTerm"&id="id_del_usuario"
+-RETORNA EL CONTENIDO DE LAS TRES APIS
+-"searchTerm"= TÉRMINO DE BÚSQUEDA
+
+-REQUEST TIPO POST (VERIFICAR LA LISTA DE AMIGOS DE UN USUARIO)
+-http://ing-software2018.herokuapp.com/user/friendsList
+{
+ "id": "1530155000725" //EJEMPLO DEL CUERPO DEL POST
+}
+RETORNA UN JSON CON INFORMACIÓN DETALLADA SOBRE LOS AMIGOS DEL USUARIO
+
+-REQUEST TIPO POST (AGREGAR AMIGO)
+-http://ing-software2018.herokuapp.com/user/add/friend
+{
+ "id": "1530155000725",
+ "idFriend": "1530386649486",
+ "contraseña": "xxxxxxxx"
+}
