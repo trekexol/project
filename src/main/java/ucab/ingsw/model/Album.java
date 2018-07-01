@@ -18,14 +18,14 @@ public class Album implements Serializable {
     private long identificador;
     private String nombreAlbum;
     private String descripcion;
-    private List<Long> urls = new ArrayList<>();
+    private List<Long> media = new ArrayList<>();
 
-    public List<Long> getUrls() {
-        return urls;
+    public List<Long> getMedia() {
+        return media;
     }
 
-    public void setUrls(List<Long> urls) {
-        this.urls = urls;
+    public void setMedia(List<Long> media) {
+        this.media = media;
     }
 
     public String getNombreAlbum() {
