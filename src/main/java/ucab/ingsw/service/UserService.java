@@ -261,7 +261,12 @@ public class UserService {
                 normalResponse.setFirstName(it.getFirstName());
                 normalResponse.setLastName(it.getLastName());
                 normalResponse.setEmail(it.getEmail());
+                normalResponse.setPassword(it.getPassword());
                 normalResponse.setDateOfBirth(it.getDateOfBirth());
+                normalResponse.setInstagramToken(it.getInstagramToken());
+                normalResponse.setYoutubeChannelId(it.getYoutubeChannelId());
+                normalResponse.setFriends(it.getFriends());
+                normalResponse.setAlbums(it.getAlbums());
                 friendList.add(normalResponse);
             }
         });
