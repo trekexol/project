@@ -108,7 +108,7 @@ public class MediaService {
         mediaRepository.findAll().forEach(it->{
             if(mediaIdList.stream().anyMatch(item -> item == it.getId())){
                 MediaResponse mediaResponse = new MediaResponse();
-                mediaResponse.setId(it.getId());
+                mediaResponse.setId(String.valueOf(it.getId()));
                mediaResponse.setUrl(it.getUrl());
                mediaList.add(mediaResponse);
             }
