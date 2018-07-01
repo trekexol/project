@@ -32,7 +32,7 @@ public class MediaController {
         return mediaService.deleteMedia(command,id);
     }
 
-    @RequestMapping(value = "/list/{id}", consumes = "application/json", method = RequestMethod.POST)
+    @RequestMapping(value = "/list/{id}", method = RequestMethod.GET)
     public ResponseEntity list(@PathVariable("id") String id) {
         return mediaService.MediaList(id);
     }
