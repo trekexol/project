@@ -7,14 +7,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ucab.ingsw.command.DeleteMediaCommand;
 import ucab.ingsw.model.Album;
+import ucab.ingsw.model.User;
 import ucab.ingsw.repository.UserRepository;
+import ucab.ingsw.response.AlbumResponse;
 import ucab.ingsw.response.NotifyResponse;
+import ucab.ingsw.response.MediaResponse;
 import ucab.ingsw.model.Media;
 import ucab.ingsw.command.MediaSignUpCommand;
 import ucab.ingsw.repository.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 
@@ -47,12 +53,11 @@ public class MediaService {
 
 
         public ResponseEntity<Object> registerMedia(MediaSignUpCommand command, String id) {
-            log.debug("About to be processed [{}]", command);
 
             if (!albumRepository.existsById(Long.parseLong(id))) {
-                log.info("El album no existe. ");
+                log.info("EL ALBUM NO EXISTE ");
 
-                return ResponseEntity.badRequest().body(buildNotifyResponse("El MediaController no existe."));
+                return ResponseEntity.badRequest().body(buildNotifyResponse("El album no existe."));
             } else {
                 Album album = albumService.searchAlbumById(id);
                 Media media = new Media();
@@ -62,8 +67,8 @@ public class MediaService {
                 album.getMedia().add(media.getId());
                 mediaRepository.save(media);
                 albumRepository.save(album);
-                log.info("Registered URL with ID={}", media.getId());
-                return ResponseEntity.ok().body(buildNotifyResponse("Media registrada."));
+                log.info("AGREGADA MEDIA CON ID={}", media.getId());
+                return ResponseEntity.ok().body(buildNotifyResponse("MEDIA AGREGADA"));
             }
 
         }
@@ -77,6 +82,73 @@ public class MediaService {
             return respuesta;
         }
 
+    public ResponseEntity<Object> MediaList(String id){
+        Album album = albumService.searchAlbumById(id);
+        if (album==null) {
+            log.info("NO EXISTE EL ALBUM CON ID={}", id);
+            return ResponseEntity.badRequest().body("NO EXISTE EL ALBUM");
+        }
+        else {
+            List<MediaResponse> albumList = createMediaList(album);
+            if(albumList.isEmpty()){
+                log.info("LA LISTA DEL USUARIO SE ENCUENTRA VACÍA");
+                return ResponseEntity.ok().body("LA LISTA SE ENCUENTRA VACÍA");
+            }
+            else {
+                log.info("LISTA HALLADA");
+                return ResponseEntity.ok(albumList);
+            }
+        }
+    }
+
+
+    public List<MediaResponse> createMediaList(Album album){
+        List<MediaResponse> mediaList = new ArrayList<>();
+        List<Long> mediaIdList = album.getMedia();
+        mediaRepository.findAll().forEach(it->{
+            if(mediaIdList.stream().anyMatch(item -> item == it.getId())){
+                MediaResponse mediaResponse = new MediaResponse();
+                mediaResponse.setId(it.getId());
+               mediaResponse.setUrl(it.getUrl());
+               mediaList.add(mediaResponse);
+            }
+        });
+        return mediaList;
+    }
+
+
+    public ResponseEntity<Object> deleteMedia(DeleteMediaCommand command, String id){
+        Album album = albumService.searchAlbumById(id);
+        Media media2 = searchMediaById(command.getMediaId());
+        if(album==null || media2==null || !album.getMedia().contains(media2) ){
+            return ResponseEntity.badRequest().body(buildNotifyResponse("CREDENCIALES INVÁLIDAS"));
+        }
+        else{
+            boolean result = album.getMedia().remove(Long.parseLong(command.getMediaId()));
+            if(result){
+                log.info("MEDIA ={} ELIMINADA", command.getMediaId());
+                albumRepository.save(album);
+                mediaRepository.deleteById(Long.parseLong(command.getMediaId()));
+                return ResponseEntity.ok().body("PROCESO COMPLETADO CON ÉXITO");
+            }
+            else{
+                log.error("ALBUM NO PUDO SER ELIMINADO");
+                return ResponseEntity.badRequest().body(buildNotifyResponse("ALBUM NO PUDO SER ELIMINADO"));
+            }
+        }
+    }
+
+    public Media searchMediaById(String id) {
+        try {
+            if(mediaRepository.findById(Long.parseLong(id)).isPresent()){
+                return mediaRepository.findById(Long.parseLong(id)).get();
+            }
+            else
+                return null;
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
 
     }
 
