@@ -63,6 +63,11 @@ public class UserController {
         return userService.getFriendsList(command.getId());
     }
 
+    @RequestMapping(value = "/delete/friend", consumes = "application/json", method = RequestMethod.POST)
+    public ResponseEntity<Object> deleteFriend(@Valid @RequestBody FriendCommand command) {
+        return userService.deleteFriend(command);
+    }
+
 }
 
 
