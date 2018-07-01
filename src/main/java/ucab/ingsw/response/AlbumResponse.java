@@ -10,8 +10,8 @@ import java.util.List;
 @Data
 @ToString
 public class AlbumResponse {
-    private long id;
+    private String id;
     private String name;
     private String description;
-    private List<Long> media;
+    private List<String> media;
 }

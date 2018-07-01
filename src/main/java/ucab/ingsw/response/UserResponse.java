@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @ToString
 public class UserResponse {
-    private long id;
+    private String id;
 
     private String firstName;
     private String lastName;
@@ -19,8 +19,8 @@ public class UserResponse {
     private String dateOfBirth;
     private String instagramToken;
     private String youtubeChannelId;
-    private List<Long> albums = new ArrayList<>();
-    private List<Long> friends = new ArrayList<>();
+    private List<String> albums = new ArrayList<>();
+    private List<String> friends = new ArrayList<>();
 
     public String getYoutubeChannelId() {
         return youtubeChannelId;
@@ -30,23 +30,23 @@ public class UserResponse {
         this.youtubeChannelId = youtubeChannelId;
     }
 
-    public List<Long> getFriends() {
+    public List<String> getFriends() {
         return friends;
     }
 
-    public void setFriends(List<Long> friends) {
+    public void setFriends(List<String> friends) {
         this.friends = friends;
     }
 
-    public List<Long> getAlbums() {
+    public List<String> getAlbums() {
         return albums;
     }
 
-    public void setAlbums(List<Long> albums) {
+    public void setAlbums(List<String> albums) {
         this.albums = albums;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -70,7 +70,7 @@ public class UserResponse {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 

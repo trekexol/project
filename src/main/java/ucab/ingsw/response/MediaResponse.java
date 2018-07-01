@@ -8,6 +8,6 @@ import lombok.ToString;
 @Data
 @ToString
 public class MediaResponse {
-    private long id;
+    private String id;
     private String url;
 }
