@@ -1,6 +1,6 @@
 package ucab.ingsw.service;
 
-import ucab.ingsw.command.MediaSignUpCommand;
+import ucab.ingsw.command.AlbumSignUpCommand;
 import ucab.ingsw.model.Album;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +10,12 @@ import ucab.ingsw.model.User;
 import ucab.ingsw.repository.AlbumRepository;
 import ucab.ingsw.response.NotifyResponse;
 import ucab.ingsw.repository.UserRepository;
-
+import ucab.ingsw.response.AlbumResponse;
+import java.util.List;
+import java.util.ArrayList;
 import java.time.LocalDateTime;
+import ucab.ingsw.command.DeleteAlbumCommand;
+import ucab.ingsw.repository.MediaRepository;
 
 @Slf4j
 
@@ -21,6 +25,9 @@ import java.time.LocalDateTime;
 public class AlbumService {
 
     @Autowired
+    private MediaRepository mediaRepository;
+
+    @Autowired
     private AlbumRepository albumRepository;
     @Autowired
     private UserRepository userRepository;
@@ -28,7 +35,15 @@ public class AlbumService {
     @Autowired
     private UserService userService;
 
-    public ResponseEntity<Object> registerMedia(MediaSignUpCommand command, String id) { //SE ENCARGA DE REGISTRAR TODOS LOS Albunes
+
+    public NotifyResponse buildNotifyResponse(String message) {
+        NotifyResponse respuesta = new NotifyResponse();
+        respuesta.setMessage(message);
+        respuesta.setTimestamp(LocalDateTime.now());
+        return respuesta;
+    }
+
+    public ResponseEntity<Object> registerAlbum(AlbumSignUpCommand command, String id) { //SE ENCARGA DE REGISTRAR TODOS LOS Albunes
         if (!userRepository.existsById(Long.parseLong(id))) {
             log.info("ID NO RECONOCIDA");
 
@@ -43,25 +58,81 @@ public class AlbumService {
             album.setNombreAlbum(command.getNombreAlbum());
             album.setDescripcion(command.getDescripcion());
             u.getAlbums().add(album.getId());
-            album.setUrls(null);
+            album.setMedia(null);
             albumRepository.save(album);
             userRepository.save(u);
 
-            log.info("Registered MediaController with ID={}", album.getId());
+            log.info("Registrado album con ID={}", album.getId());
 
-            return ResponseEntity.ok().body(buildNotifyResponse("MediaController registrado."));
+            return ResponseEntity.ok().body(buildNotifyResponse("Album registrado."));
 
         }
     }
 
-    private NotifyResponse buildNotifyResponse(String message) { //MUESTRA UN MENSAJE DE NOTIFICACIÓN
-        NotifyResponse respuesta = new NotifyResponse();
-        respuesta.setMessage(message);
-        respuesta.setTimestamp(LocalDateTime.now());
-        return respuesta;
+    public ResponseEntity<Object> AlbumList(String id){
+        User user = userService.searchUserById(id);
+        if (user==null) {
+            log.info("NO EXISTE EL USUARIO CON ID={}", id);
+            return ResponseEntity.badRequest().body("NO EXISTE EL USUARIO");
+        }
+        else {
+            List<AlbumResponse> albumList = createAlbumList(user);
+            if(albumList.isEmpty()){
+                log.info("LA LISTA DEL USUARIO SE ENCUENTRA VACÍA");
+                return ResponseEntity.ok().body("LA LISTA SE ENCUENTRA VACÍA");
+            }
+            else {
+                log.info("LISTA HALLADA");
+                return ResponseEntity.ok(albumList);
+            }
+        }
     }
 
-    public Album searchMediaById(String id) {
+
+    public List<AlbumResponse> createAlbumList(User user){
+        List<AlbumResponse> albumList = new ArrayList<>();
+        List<Long> albumIdList = user.getAlbums();
+        albumRepository.findAll().forEach(it->{
+            if(albumIdList.stream().anyMatch(item -> item == it.getId())){
+                AlbumResponse albumResponse = new AlbumResponse();
+                albumResponse.setId(it.getId());
+                albumResponse.setName(it.getNombreAlbum());
+                albumResponse.setDescription(it.getDescripcion());
+                albumResponse.setMedia(it.getMedia());
+                albumList.add(albumResponse);
+            }
+        });
+        return albumList;
+    }
+
+
+    public ResponseEntity<Object> deleteAlbum(DeleteAlbumCommand command, String id){
+        User user = userService.searchUserById(id);
+        Album album2 = searchAlbumById(command.getAlbumId());
+        if(user==null || album2==null || !user.getAlbums().contains(album2) ){
+            return ResponseEntity.badRequest().body(buildNotifyResponse("CREDENCIALES INVÁLIDAS"));
+        }
+        else{
+            Album album = albumRepository.findById(Long.parseLong(command.getAlbumId())).get();
+            album.getMedia().forEach(it->{
+                mediaRepository.deleteById(it);
+            });
+            boolean result = user.getAlbums().remove(Long.parseLong(command.getAlbumId()));
+            if(result){
+                log.info("ALBUM ={} ELIMINADO", command.getAlbumId());
+
+                userRepository.save(user);
+                albumRepository.deleteById(Long.parseLong(command.getAlbumId()));
+                return ResponseEntity.ok().body("PROCESO COMPLETADO CON ÉXITO");
+            }
+            else{
+                log.error("ALBUM NO PUDO SER ELIMINADO");
+                return ResponseEntity.badRequest().body(buildNotifyResponse("ALBUM NO PUDO SER ELIMINADO"));
+            }
+        }
+    }
+
+    public Album searchAlbumById(String id) {
         try {
             if(albumRepository.findById(Long.parseLong(id)).isPresent()){
                 return albumRepository.findById(Long.parseLong(id)).get();

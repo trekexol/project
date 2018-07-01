@@ -11,7 +11,7 @@ import ucab.ingsw.model.Album;
 import ucab.ingsw.repository.UserRepository;
 import ucab.ingsw.response.NotifyResponse;
 import ucab.ingsw.model.Media;
-import ucab.ingsw.command.UrlSignUpCommand;
+import ucab.ingsw.command.MediaSignUpCommand;
 import ucab.ingsw.repository.*;
 
 import java.time.LocalDateTime;
@@ -46,7 +46,7 @@ public class MediaService {
     private AlbumService albumService;
 
 
-        public ResponseEntity<Object> register(UrlSignUpCommand command,String id) {
+        public ResponseEntity<Object> registerMedia(MediaSignUpCommand command, String id) {
             log.debug("About to be processed [{}]", command);
 
             if (!albumRepository.existsById(Long.parseLong(id))) {
@@ -54,12 +54,12 @@ public class MediaService {
 
                 return ResponseEntity.badRequest().body(buildNotifyResponse("El MediaController no existe."));
             } else {
-                Album album = albumService.searchMediaById(id);
+                Album album = albumService.searchAlbumById(id);
                 Media media = new Media();
                 media.setId(System.currentTimeMillis());
                 media.setIdentificador(Long.parseLong(id));
                 media.setUrl(command.getUrl());
-                album.getUrls().add(media.getId());
+                album.getMedia().add(media.getId());
                 mediaRepository.save(media);
                 albumRepository.save(album);
                 log.info("Registered URL with ID={}", media.getId());
