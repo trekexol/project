@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ucab.ingsw.command.UrlSignUpCommand;
+import ucab.ingsw.command.MediaSignUpCommand;
 import ucab.ingsw.service.MediaService;
 
 import javax.validation.Valid;
@@ -22,8 +22,8 @@ public class MediaController {
         private MediaService mediaService;
 
         @RequestMapping(value = "/register/{id}", consumes = "application/json", method = RequestMethod.POST)
-        public ResponseEntity register(@Valid @RequestBody UrlSignUpCommand command, @PathVariable("id") String id) {
-            return mediaService.register(command,id);
+        public ResponseEntity register(@Valid @RequestBody MediaSignUpCommand command, @PathVariable("id") String id) {
+            return mediaService.registerMedia(command,id);
         }
 
 
