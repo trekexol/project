@@ -34,7 +34,7 @@ public class AlbumController {
     }
 
     @RequestMapping(value = "/list/{id}",  method = RequestMethod.GET)
-    public ResponseEntity list(@PathVariable("id") String id) {
+    public ResponseEntity<Object> list(@PathVariable("id") String id) {
         return albumService.AlbumList(id);
     }
 }
