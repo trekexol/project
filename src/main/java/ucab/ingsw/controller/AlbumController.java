@@ -33,7 +33,7 @@ public class AlbumController {
         return albumService.deleteAlbum(command,id);
     }
 
-    @RequestMapping(value = "/list/{id}", consumes = "application/json", method = RequestMethod.GET)
+    @RequestMapping(value = "/list/{id}",  method = RequestMethod.GET)
     public ResponseEntity list(@PathVariable("id") String id) {
         return albumService.AlbumList(id);
     }
