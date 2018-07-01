@@ -3,7 +3,7 @@
 -RETORNA EL CONTENIDO DE LAS TRES APIS
 -"searchTerm"= TÉRMINO DE BÚSQUEDA
 
--REQUEST TIPO POST (VERIFICAR LA LISTA DE AMIGOS DE UN USUARIO)
+-REQUEST TIPO POST (CONSEGUIR LA LISTA DE AMIGOS DE UN USUARIO)
 -http://ing-software2018.herokuapp.com/user/friendsList
 {
  "id": "1530155000725" //EJEMPLO DEL CUERPO DEL POST
@@ -17,3 +17,15 @@ RETORNA UN JSON CON INFORMACIÓN DETALLADA SOBRE LOS AMIGOS DEL USUARIO
  "idFriend": "1530386649486",
  "contraseña": "xxxxxxxx"
 }
+
+-REQUEST TIPO POST (AGREGAR MEDIA)
+http://ing-software2018.herokuapp.com/media/register/"id_del_album"
+{
+ "url": "https://open.spotify.com/track/0CuQ686S9l2fLgKdbD6oWR"
+}
+
+-REQUEST TIPO GET (CONSEGUIR LISTA DE MEDIAS)
+http://ing-software2018.herokuapp.com/media/list/"id_del_album"
+
+-REQUEST TIPO GET (CONSEGUIR LISTA DE ALBUMES)
+http://ing-software2018.herokuapp.com/album/list/"id_del_usuario"
