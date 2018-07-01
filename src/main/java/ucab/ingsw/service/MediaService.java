@@ -124,8 +124,8 @@ public class MediaService {
             return ResponseEntity.badRequest().body(buildNotifyResponse("CREDENCIALES INVÁLIDAS"));
         }
         else{
-            boolean result = album.getMedia().remove(Long.parseLong(command.getMediaId()));
-            if(result){
+            boolean success = album.getMedia().remove(Long.parseLong(command.getMediaId()));
+            if(success){
                 log.info("MEDIA ={} ELIMINADA", command.getMediaId());
                 albumRepository.save(album);
                 mediaRepository.deleteById(Long.parseLong(command.getMediaId()));

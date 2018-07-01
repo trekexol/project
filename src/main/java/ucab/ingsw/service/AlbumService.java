@@ -117,8 +117,8 @@ public class AlbumService {
             album.getMedia().forEach(it->{
                 mediaRepository.deleteById(it);
             });
-            boolean result = user.getAlbums().remove(Long.parseLong(command.getAlbumId()));
-            if(result){
+            boolean success = user.getAlbums().remove(Long.parseLong(command.getAlbumId()));
+            if(success){
                 log.info("ALBUM ={} ELIMINADO", command.getAlbumId());
 
                 userRepository.save(user);

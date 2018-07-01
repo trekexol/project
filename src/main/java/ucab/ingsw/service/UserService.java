@@ -273,6 +273,27 @@ public class UserService {
         return friendList;
     }
 
+    public ResponseEntity<Object> deleteFriend(FriendCommand command){
+        User user = searchUserById(command.getId());
+        if(user==null) {
+            return ResponseEntity.badRequest().body(buildNotifyResponse("USUARIO NO EXISTE"));
+        }
+        else{
+            List<Long> friends = user.getFriends();
+            Long friendId = Long.parseLong(command.getIdFriend());
+            boolean success = friends.remove(friendId);
+            if (success) {
+                log.info("AMIGO REMOVIDO");
+                user.setFriends(friends);
+                userRepository.save(user);
+                return ResponseEntity.ok().body("AMIGO REMOVIDO");
+            }
+            else {
+                log.error("ERROR");
+                return ResponseEntity.badRequest().body(buildNotifyResponse("AMIGO NO PUDO SER REMOVIDO"));
+            }
+        }
+    }
 }
 
 
