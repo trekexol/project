@@ -42,3 +42,18 @@ https://ing-software2018.herokuapp.com/user/register
  "tokenInstagram": "xxxx",
  "channelYoutube": "xxxx"
 }
+
+-REQUEST TIPO POST (ACTUALIZAR DATOS DE UN USUARIO)
+
+https://ing-software2018.herokuapp.com/user/update/1530497197365
+{
+ "firstName": "xxxx",
+ "lastName": "xxxx",
+ "email": "xxxx",
+ "password": "xxxx",
+ "confirmationPassword": "xxxx",
+ "dateOfBirth": "xxxx",
+ "tokenInstagram": "xxxx",
+ "channelYoutube": "xxxx"
+}
+
