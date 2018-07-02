@@ -6,6 +6,4 @@ public interface ValidationRules {
     int FIRST_LAST_NAME_MAX_SIZE = 40;
     int NAME_MAX_SIZE = 40;
     String FIRST_LAST_NAME_REGEX = "[a-zA-Z ]([&.'-]?[a-zA-Z ][&.'-]?)*";
-    String BIRTH_REGEX = "dd/mm/yyyy";
-
 }
