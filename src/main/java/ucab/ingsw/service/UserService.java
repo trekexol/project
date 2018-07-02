@@ -109,8 +109,7 @@ public class UserService {
             log.info("Cannot find user with ID={}", id);
             return ResponseEntity.badRequest().body(buildNotifyResponse("id invalido"));
         } else {
-            User user = new User();
-
+            User user = searchUserById(id);
             user.setFirstName(command.getFirstName());
             user.setLastName(command.getLastName());
             user.setEmail(command.getEmail());
@@ -119,9 +118,7 @@ public class UserService {
             user.setInstagramToken(command.getTokenInstagram());
             user.setYoutubeChannelId(command.getChannelYoutube());
             userRepository.save(user);
-
             log.info("Updated user with ID={}", user.getId());
-
             return ResponseEntity.ok().body(buildNotifyResponse("La operación ha sido exitosa."));
         }
     }
