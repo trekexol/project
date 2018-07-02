@@ -169,7 +169,7 @@ public class UserService {
             int day = Integer.parseInt(birthDate[0]);
             int mon = Integer.parseInt(birthDate[1]);
             int year = Integer.parseInt(birthDate[2]);
-            if (!(year > 0 && mon > 0 && mon < 13 && day > 0 && day < 32)) return false;
+            if (!((day > 0 && day < 32)&& (mon > 0 && mon < 13) && (year > 0) )) return false;
             LocalDateTime date = LocalDateTime.now();
             if (date.getYear()-10 > year) return true;
             else if (date.getYear()-10 == year) {
