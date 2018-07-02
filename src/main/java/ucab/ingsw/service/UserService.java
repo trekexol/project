@@ -29,7 +29,6 @@ public class UserService {
     private UserRepository userRepository;
 
 
-
     //-----------------------------------------------------------------------------------------------------------
     //SERVICIO PARA ACCEDER A LA RED SOCIAL
     public ResponseEntity<Object> login(UserLoginCommand command) {
@@ -85,7 +84,8 @@ public class UserService {
                 user.setLastName(command.getLastName());
                 user.setEmail(command.getEmail());
                 user.setPassword(command.getPassword());
-                user.setDateOfBirth(command.getDateOfBirth());
+                if (verifyUserBirthDate(command.getDateOfBirth())) user.setDateOfBirth(command.getDateOfBirth());
+                else return ResponseEntity.badRequest().body(buildNotifyResponse("La fecha de nacimiento no es válida"));
                 user.setInstagramToken(command.getTokenInstagram());
                 user.setYoutubeChannelId(command.getChannelYoutube());
                 user.setAlbums(null);
@@ -160,6 +160,27 @@ public class UserService {
             return ResponseEntity.badRequest().body(buildNotifyResponse("Item no válido."));
             }
         }
+
+    //-----------------------------------------------------------------------------------------------------------
+
+    private boolean verifyUserBirthDate (String string){
+        try {
+            String[] birthDate = string.split("/");
+            int day = Integer.parseInt(birthDate[0]);
+            int mon = Integer.parseInt(birthDate[1]);
+            int year = Integer.parseInt(birthDate[2]);
+            if (!(year > 0 && mon > 0 && mon < 13 && day > 0 && day < 32)) return false;
+            LocalDateTime date = LocalDateTime.now();
+            if (date.getYear()-10 > year) return true;
+            else if (date.getYear()-10 == year) {
+                if (date.getDayOfMonth() > day) return true;
+                else if (date.getDayOfMonth() == day) return false;
+                else return false;
+            } else return false;
+        }catch(NumberFormatException e){
+            return false;
+        }
+    }
 
     //-----------------------------------------------------------------------------------------------------------
 
