@@ -38,7 +38,7 @@ public class UserController {
         return userService.login(command);
     }
 
-    @RequestMapping(value = "/update/{id}", consumes = "application/json", method = RequestMethod.PUT)
+    @RequestMapping(value = "/update/{id}", consumes = "application/json", method = RequestMethod.POST)
     public ResponseEntity update(@Valid @RequestBody UserChangingAttributesCommand command, @PathVariable("id") String id) {
         return userService.update(command, id);
     }
