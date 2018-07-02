@@ -47,7 +47,7 @@ public class UserSignUpCommand implements Serializable {
 
  @NotNull(message = "Por favor, introduzca una fecha de nacimiento.")
  @NotEmpty(message = "Por favor, introduzca una fecha de nacimiento.")
- @Pattern(regexp = ValidationRules.BIRTH_REGEX)
+
  private String dateOfBirth;
 
  @NotNull(message = "Por favor, introduzca un token de Instagram.")
