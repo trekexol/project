@@ -14,7 +14,6 @@ import java.util.List;
 import javax.validation.Valid;
 
 import ucab.ingsw.command.UserLoginCommand;
-import ucab.ingsw.command.FriendListCommand;
 
 @Slf4j
 
