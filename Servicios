@@ -39,8 +39,7 @@ https://ing-software2018.herokuapp.com/user/register
  "password": "xxxx",
  "confirmationPassword": "xxxx",
  "dateOfBirth": "10/25/1999",
- "tokenInstagram": "xxxx",
- "channelYoutube": "xxxx"
+ "tokenInstagram": "xxxx"
 }
 
 -REQUEST TIPO POST (ACTUALIZAR DATOS DE UN USUARIO)
@@ -53,7 +52,6 @@ https://ing-software2018.herokuapp.com/user/update/1530497197365
  "password": "xxxx",
  "confirmationPassword": "xxxx",
  "dateOfBirth": "xxxx",
- "tokenInstagram": "xxxx",
- "channelYoutube": "xxxx"
+ "tokenInstagram": "xxxx"
 }
 
