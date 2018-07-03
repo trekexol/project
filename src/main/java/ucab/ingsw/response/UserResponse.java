@@ -18,7 +18,6 @@ public class UserResponse {
     private String password;
     private String dateOfBirth;
     private String instagramToken;
-    private String youtubeChannelId;
     private String profilePicture;
     private List<String> albums = new ArrayList<>();
     private List<String> friends = new ArrayList<>();
@@ -30,14 +29,6 @@ public class UserResponse {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
-    }
-
-    public String getYoutubeChannelId() {
-        return youtubeChannelId;
-    }
-
-    public void setYoutubeChannelId(String youtubeChannelId) {
-        this.youtubeChannelId = youtubeChannelId;
     }
 
     public List<String> getFriends() {
