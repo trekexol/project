@@ -20,16 +20,17 @@ public class User  implements Serializable {
     private String password;
     private String dateOfBirth;
     private String instagramToken;
-    private String youtubeChannelId;
+    private String profilePicture;
     private List<Long> albums = new ArrayList<>();
     private List<Long> friends = new ArrayList<>();
 
-    public String getYoutubeChannelId() {
-        return youtubeChannelId;
+
+    public String getProfilePicture() {
+        return profilePicture;
     }
 
-    public void setYoutubeChannelId(String youtubeChannelId) {
-        this.youtubeChannelId = youtubeChannelId;
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
     public List<Long> getFriends() {
