@@ -55,15 +55,14 @@ public class UserService {
     //-----------------------------------------------------------------------------------------------------------
     //SERVICIO PARA ACCEDER A LA RED SOCIAL
     public ResponseEntity<Object> login(UserLoginCommand command) {
-        log.debug("About to process [{}]", command);
         User u = userRepository.findFirstByEmailIgnoreCaseContaining(command.getEmail());
         if (u == null) {
-             log.info("Cannot find user with email={}", command.getEmail());
+             log.info("NO SE PUEDE HALLAR AL USUARIO CON LA DIRECCIÓN DE CORREO");
 
-            return ResponseEntity.badRequest().body(buildNotifyResponse("Dirección de correo no válida."));
+            return ResponseEntity.badRequest().body(buildNotifyResponse("DIRECCIÓN DE CORREO NO VÁLIDA"));
         } else {
             if (u.getPassword().equals(command.getPassword())) {
-                  log.info("Successful login for user={}", u.getId());
+                  log.info("LOGIN EXITOSO");
 
                 UserResponse respuesta = new UserResponse();
                 respuesta.setFirstName(u.getFirstName());
@@ -75,9 +74,9 @@ public class UserService {
 
                 return ResponseEntity.ok(respuesta);
             } else {
-                log.info("{} is not valid password for user {}", command.getPassword(), u.getId());
+                log.info("CONTRASEÑA NO ES CORRECTA");
 
-                return ResponseEntity.badRequest().body(buildNotifyResponse("Proceso no válido. "));
+                return ResponseEntity.badRequest().body(buildNotifyResponse("CONTRASEÑA NO VÁLIDA"));
             }
         }
 
@@ -88,16 +87,15 @@ public class UserService {
     //SERVICIO PARA REGISTRAR USUARIO
 
     public ResponseEntity<Object> register(UserSignUpCommand command) {
-        log.debug("About to be processed [{}]", command);
 
         if (userRepository.existsByEmail(command.getEmail())) {
-            log.info("La dirección de correo {} ya se encuentra en la base de datos.", command.getEmail());
+            log.info("LA DIRECCIÓN YA ESTÁ SIENDO USADA POR OTRO USUARIO", command.getEmail());
 
-            return ResponseEntity.badRequest().body(buildNotifyResponse("El usuario ya se encuentra registrado en el sistema."));
+            return ResponseEntity.badRequest().body(buildNotifyResponse("EL USUARIO YA SE ENCUENTRA REGISTRADO EN EL SISTEMA"));
         } else {
             if (!command.getPassword().equals(command.getConfirmationPassword())) {
-                    log.info("The passwords are not equal");
-                return ResponseEntity.badRequest().body(buildNotifyResponse("Las contrasenas no coinciden"));
+                    log.info("LAS CONTRASEÑAS NO SON IGUALES");
+                return ResponseEntity.badRequest().body(buildNotifyResponse("LAS CONTRASEÑAS NO SON IGUALES"));
             } else {
                 User user = new User();
 
@@ -108,16 +106,16 @@ public class UserService {
                 user.setEmail(command.getEmail());
                 user.setPassword(command.getPassword());
                 if (verifyUserBirthDate(command.getDateOfBirth())) user.setDateOfBirth(command.getDateOfBirth());
-                else return ResponseEntity.badRequest().body(buildNotifyResponse("La fecha de nacimiento no es válida"));
+                else return ResponseEntity.badRequest().body(buildNotifyResponse("LA FECHA DE NACIMIENTO NO ES VÁLIDA"));
                 user.setProfilePicture(getRandomImage());
                 user.setInstagramToken(command.getTokenInstagram());
                 user.setAlbums(null);
                 user.setFriends(null);
                 userRepository.save(user);
 
-                  log.info("Registered user with ID={}", user.getId());
+                  log.info("REGISTRADO USUARIO CON ID={}", user.getId());
 
-                return ResponseEntity.ok().body(buildNotifyResponse("Usuario registrado."));
+                return ResponseEntity.ok().body(buildNotifyResponse("USUARIO REGISTRADO"));
             }
         }
     }
@@ -127,10 +125,9 @@ public class UserService {
     //SERVICIO PARA ACTUALIZAR USUARIO
 
     public ResponseEntity<Object> update(UserChangingAttributesCommand command, String id) {
-        log.debug("About to process [{}]", command);
         if (!userRepository.existsById(Long.parseLong(id))) {
-            log.info("Cannot find user with ID={}", id);
-            return ResponseEntity.badRequest().body(buildNotifyResponse("id invalido"));
+            log.info("NO SE PUDO HALLAR AL USUARIO CON ID={}", id);
+            return ResponseEntity.badRequest().body(buildNotifyResponse("EL ID ES INVÁLIDO"));
         } else {
             User user = searchUserById(id);
             user.setFirstName(command.getFirstName());
@@ -142,8 +139,8 @@ public class UserService {
             user.setInstagramToken(command.getTokenInstagram());
 
             userRepository.save(user);
-            log.info("Updated user with ID={}", user.getId());
-            return ResponseEntity.ok().body(buildNotifyResponse("La operación ha sido exitosa."));
+            log.info("ACTUALIZADO USUARIO CON ID={}", user.getId());
+            return ResponseEntity.ok().body(buildNotifyResponse("LA OPERACIÓN FUE EXITOSA"));
         }
     }
 
@@ -155,16 +152,15 @@ public class UserService {
     public List<User> searchByName(String name){
         List<User> u = userRepository.findByFirstNameIgnoreCaseContaining(name);
         if(u==null){
-            log.info("No se encontraron usuarios con el nombre : ",name);
+            log.info("NO SE HALLARON USUARIOS CON EL NOMBRE : ",name);
         }else
-        log.info("Cantidad de Usuarios encontrados={}", u.size(), name);
+        log.info("NÚMERO DE USUARIOS HALLADOS={}", u.size(), name);
         return u;
     }
 
     //-----------------------------------------------------------------------------------------------------------
     //SERVICIO PARA ELIMINAR USUARIO
     public ResponseEntity<Object> delete(UserDeleteCommand command, String id) {
-        log.debug("About to process [{}]");
         if (userRepository.existsById(Long.parseLong(id))) {
            User u = searchUserById(id);
            if (command.getPassword().equals(u.getPassword())){
@@ -181,15 +177,15 @@ public class UserService {
                    userRepository.save(friend);
                });
             userRepository.deleteById(Long.parseLong(id));
-            return  ResponseEntity.ok().body(buildNotifyResponse("La operación ha sido exitosa."));}
+            return  ResponseEntity.ok().body(buildNotifyResponse("LA OPERACIÓN HA SIDO EXITOSA"));}
             else{
-               return  ResponseEntity.ok().body(buildNotifyResponse("Las contraseñas no son iguales."));
+               return  ResponseEntity.ok().body(buildNotifyResponse("LAS CONTRASEÑAS NO SON IGUALES"));
         }
 
     } else {
-            log.info("Cannot find user with Item={}", id);
+            log.info("NO SE PUDO ENCONTRAR AL USUARIO");
 
-            return ResponseEntity.badRequest().body(buildNotifyResponse("Item no válido."));
+            return ResponseEntity.badRequest().body(buildNotifyResponse("USUARIO NO ENCONTRADO"));
             }
         }
 
@@ -252,9 +248,8 @@ public class UserService {
     //-----------------------------------------------------------------------------------------------------------
     //SERVICIO PARA AGREGAR AMIGO
     public ResponseEntity<Object> addFriend(FriendCommand command) {
-        log.debug("About to process [{}]", command);
         if (!userRepository.existsById(Long.parseLong(command.getId())) || !userRepository.existsById(Long.parseLong(command.getIdFriend()))) {
-            log.info("Cannot find user with ID={}");
+            log.info("NO SE HA PODIDO HALLA USUARIO");
             return ResponseEntity.badRequest().body(buildNotifyResponse("ID NO VÁLIDO"));
         } else {
             User user1= searchUserById(command.getIdFriend());

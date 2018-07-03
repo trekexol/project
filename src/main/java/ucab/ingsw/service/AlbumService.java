@@ -62,9 +62,9 @@ public class AlbumService {
             albumRepository.save(album);
             userRepository.save(u);
 
-            log.info("Registrado album con ID={}", album.getId());
+            log.info("AGREGADO ALBUM CON ID={}", album.getId());
 
-            return ResponseEntity.ok().body(buildNotifyResponse("Album registrado."));
+            return ResponseEntity.ok().body(buildNotifyResponse("EL ALBUM HA SIDO AGREGADO"));
 
         }
     }
