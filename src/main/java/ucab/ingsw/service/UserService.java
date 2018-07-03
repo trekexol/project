@@ -309,6 +309,7 @@ public class UserService {
                 normalResponse.setPassword(it.getPassword());
                 normalResponse.setDateOfBirth(it.getDateOfBirth());
                 normalResponse.setInstagramToken(it.getInstagramToken());
+                normalResponse.setProfilePicture(it.getProfilePicture());
                 List<String> albumes = new ArrayList<>();
                 it.getAlbums().forEach( j->{
                             albumes.add(j.toString());
