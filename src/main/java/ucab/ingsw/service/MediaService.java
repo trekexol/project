@@ -57,18 +57,21 @@ public class MediaService {
             if (!albumRepository.existsById(Long.parseLong(id))) {
                 log.info("EL ALBUM NO EXISTE ");
 
-                return ResponseEntity.badRequest().body(buildNotifyResponse("El album no existe."));
+                return ResponseEntity.badRequest().body(buildNotifyResponse("EL ALBUM NO EXISTE"));
             } else {
                 Album album = albumService.searchAlbumById(id);
-                Media media = new Media();
-                media.setId(System.currentTimeMillis());
-                media.setIdentificador(Long.parseLong(id));
-                media.setUrl(command.getUrl());
-                album.getMedia().add(media.getId());
-                mediaRepository.save(media);
+                command.getUrl().forEach( j->{
+                          Media media = new Media();
+                          media.setId(System.currentTimeMillis());
+                          media.setIdentificador(Long.parseLong(id));
+                          media.setUrl(j);
+                          mediaRepository.save(media);
+                          album.getMedia().add(media.getId());
+                        }
+                );
                 albumRepository.save(album);
-                log.info("AGREGADA MEDIA CON ID={}", media.getId());
-                return ResponseEntity.ok().body(buildNotifyResponse("MEDIA AGREGADA"));
+                log.info("AGREGADA LISTA DE MEDIAS");
+                return ResponseEntity.ok().body(buildNotifyResponse("LISTA DE MEDIAS AGREGADA"));
             }
 
         }
