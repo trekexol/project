@@ -19,8 +19,18 @@ public class UserResponse {
     private String dateOfBirth;
     private String instagramToken;
     private String youtubeChannelId;
+    private String profilePicture;
     private List<String> albums = new ArrayList<>();
     private List<String> friends = new ArrayList<>();
+
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
 
     public String getYoutubeChannelId() {
         return youtubeChannelId;
