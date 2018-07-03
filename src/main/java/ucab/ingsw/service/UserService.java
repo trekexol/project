@@ -5,18 +5,18 @@ import ucab.ingsw.command.UserSignUpCommand;
 import ucab.ingsw.command.UserLoginCommand;
 import ucab.ingsw.command.UserDeleteCommand;
 import ucab.ingsw.command.UserChangingAttributesCommand;
-import ucab.ingsw.model.User;
+import ucab.ingsw.model.*;
 import ucab.ingsw.response.UserResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ucab.ingsw.response.NotifyResponse;
-import ucab.ingsw.repository.UserRepository;
+import ucab.ingsw.repository.*;
 import java.util.ArrayList;
 
 import java.time.LocalDateTime;
-
+import java.util.Random;
 
 import java.util.List;
 
@@ -28,6 +28,26 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private AlbumRepository albumRepository;
+
+    @Autowired
+    private MediaRepository mediaRepository;
+
+    @Autowired
+    private AlbumService albumService;
+
+    @Autowired
+    private MediaService mediaService;
+
+
+
+    public String getRandomImage() {
+         Random random = new Random();
+         int image = random.nextInt(99999999);
+         String imgUrl = "https://www.gravatar.com/avatar/"+String.valueOf(image)+"?s=450&d=identicon&r=PG";
+    return imgUrl;
+}
 
     //-----------------------------------------------------------------------------------------------------------
     //SERVICIO PARA ACCEDER A LA RED SOCIAL
@@ -86,8 +106,8 @@ public class UserService {
                 user.setPassword(command.getPassword());
                 if (verifyUserBirthDate(command.getDateOfBirth())) user.setDateOfBirth(command.getDateOfBirth());
                 else return ResponseEntity.badRequest().body(buildNotifyResponse("La fecha de nacimiento no es válida"));
+                user.setProfilePicture(getRandomImage());
                 user.setInstagramToken(command.getTokenInstagram());
-                user.setYoutubeChannelId(command.getChannelYoutube());
                 user.setAlbums(null);
                 user.setFriends(null);
                 userRepository.save(user);
@@ -115,8 +135,9 @@ public class UserService {
             user.setEmail(command.getEmail());
             user.setPassword(command.getPassword());
             user.setDateOfBirth(command.getDateOfBirth());
+            user.setProfilePicture(getRandomImage());
             user.setInstagramToken(command.getTokenInstagram());
-            user.setYoutubeChannelId(command.getChannelYoutube());
+
             userRepository.save(user);
             log.info("Updated user with ID={}", user.getId());
             return ResponseEntity.ok().body(buildNotifyResponse("La operación ha sido exitosa."));
@@ -131,7 +152,7 @@ public class UserService {
     public List<User> searchByName(String name){
         List<User> u = userRepository.findByFirstNameIgnoreCaseContaining(name);
         if(u==null){
-            log.info("No se encontraros usuarios con el nombre : ",name);
+            log.info("No se encontraron usuarios con el nombre : ",name);
         }else
         log.info("Cantidad de Usuarios encontrados={}", u.size(), name);
         return u;
@@ -141,10 +162,21 @@ public class UserService {
     //SERVICIO PARA ELIMINAR USUARIO
     public ResponseEntity<Object> delete(UserDeleteCommand command, String id) {
         log.debug("About to process [{}]");
-
         if (userRepository.existsById(Long.parseLong(id))) {
            User u = searchUserById(id);
            if (command.getPassword().equals(u.getPassword())){
+               u.getAlbums().forEach(i -> {
+                   Album album = albumService.searchAlbumById(String.valueOf(i));
+                    album.getMedia().forEach(j -> {
+                       mediaRepository.deleteById(j);
+                    });
+                   albumRepository.deleteById(i);
+               });
+               u.getFriends().forEach(h -> {
+                   User friend = searchUserById(String.valueOf(h));
+                   friend.getFriends().remove(u.getId());
+                   userRepository.save(friend);
+               });
             userRepository.deleteById(Long.parseLong(id));
             return  ResponseEntity.ok().body(buildNotifyResponse("La operación ha sido exitosa."));}
             else{
@@ -213,18 +245,7 @@ public class UserService {
             return null;
         }
     }
-    //-----------------------------------------------------------------------------------------------------------
-    public Boolean doNotSearchUserById(String id) {
-        try {
-            if(userRepository.findById(Long.parseLong(id)).isPresent()){
-                return true;
-            }
-            else
-                return null;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
+
     //-----------------------------------------------------------------------------------------------------------
     //SERVICIO PARA AGREGAR AMIGO
     public ResponseEntity<Object> addFriend(FriendCommand command) {
@@ -281,7 +302,6 @@ public class UserService {
                 normalResponse.setPassword(it.getPassword());
                 normalResponse.setDateOfBirth(it.getDateOfBirth());
                 normalResponse.setInstagramToken(it.getInstagramToken());
-                normalResponse.setYoutubeChannelId(it.getYoutubeChannelId());
                 List<String> albumes = new ArrayList<>();
                 it.getAlbums().forEach( j->{
                             albumes.add(j.toString());
