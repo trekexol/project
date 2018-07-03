@@ -1,5 +1,6 @@
 package ucab.ingsw.service;
 
+import org.bson.internal.Base64;
 import ucab.ingsw.command.FriendCommand;
 import ucab.ingsw.command.UserSignUpCommand;
 import ucab.ingsw.command.UserLoginCommand;
@@ -48,6 +49,8 @@ public class UserService {
          String imgUrl = "https://www.gravatar.com/avatar/"+String.valueOf(image)+"?s=450&d=identicon&r=PG";
     return imgUrl;
 }
+
+
 
     //-----------------------------------------------------------------------------------------------------------
     //SERVICIO PARA ACCEDER A LA RED SOCIAL
@@ -252,9 +255,12 @@ public class UserService {
         log.debug("About to process [{}]", command);
         if (!userRepository.existsById(Long.parseLong(command.getId())) || !userRepository.existsById(Long.parseLong(command.getIdFriend()))) {
             log.info("Cannot find user with ID={}");
-            return ResponseEntity.badRequest().body(buildNotifyResponse("id invalido"));
+            return ResponseEntity.badRequest().body(buildNotifyResponse("ID NO VÁLIDO"));
         } else {
+            User user1= searchUserById(command.getIdFriend());
            User user0 = searchUserById(command.getId());
+           if (user0.getFriends().contains(user1.getId())) return  ResponseEntity.badRequest().body(buildNotifyResponse("LOS USUARIOS YA SON AMIGOS"));
+            if (user0.equals(user1)) return ResponseEntity.badRequest().body(buildNotifyResponse("EL USUARIO NO PUEDE SER AMIGO DE SÍ MISMO"));
            if (user0.getPassword().equals(command.getContraseña())){
             User user = searchUserById(command.getId());
             User friend = searchUserById(command.getIdFriend());
@@ -262,11 +268,12 @@ public class UserService {
             friend.getFriends().add(Long.parseLong(command.getId()));
          userRepository.save(user);
          userRepository.save(friend);
-            log.info("Updated user with ID={}", user.getId());
-            return ResponseEntity.ok().body(buildNotifyResponse("La operación ha sido exitosa."));}
+            log.info("ACTUALIZADO USUARIO CON ID={}", user.getId());
+            return ResponseEntity.ok().body(buildNotifyResponse("LA OPERACIÓN HA SIDO EXITOSA"));}
             else {
-               return ResponseEntity.badRequest().body(buildNotifyResponse("La contraseña no pertenece al usuario."));
+               return ResponseEntity.badRequest().body(buildNotifyResponse("LA CONTRASEÑA NO PERTENECE AL USUARIO"));
         }
+
         }
     }
 
