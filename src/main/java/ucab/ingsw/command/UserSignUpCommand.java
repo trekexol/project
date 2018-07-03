@@ -3,6 +3,7 @@ package ucab.ingsw.command;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
@@ -47,16 +48,11 @@ public class UserSignUpCommand implements Serializable {
 
  @NotNull(message = "Por favor, introduzca una fecha de nacimiento.")
  @NotEmpty(message = "Por favor, introduzca una fecha de nacimiento.")
-
  private String dateOfBirth;
 
  @NotNull(message = "Por favor, introduzca un token de Instagram.")
  @NotEmpty(message = "Por favor, introduzca un token de Instagram.")
  private String tokenInstagram;
-
- @NotNull(message = "Por favor, introduzca un canal de Youtube.")
- @NotEmpty(message = "Por favor, introduzca un canal de Youtube.")
- private String channelYoutube;
 
 
 
@@ -108,11 +104,6 @@ public class UserSignUpCommand implements Serializable {
   this.dateOfBirth = dateOfBirth;
  }
 
- public String getChannelYoutube() {
-  return channelYoutube;
- }
 
- public void setChannelYoutube(String channelYoutube) {
-  this.channelYoutube = channelYoutube;
- }
+
 }
