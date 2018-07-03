@@ -3,6 +3,7 @@ package ucab.ingsw.command;
 import java.io.Serializable;
 import lombok.Data;
 import lombok.ToString;
+import java.util.*;
 
 import javax.validation.constraints.*;
 
@@ -13,15 +14,9 @@ public class MediaSignUpCommand implements Serializable {
 
 
 
-    @NotNull(message = "Por favor, introduzca el URL")
-    @NotEmpty(message = "Por favor, introduzca el URL")
-    private String url;
+    @NotNull(message = "POR FAVOR, INTRODUZCA LA LISTA DE URLS")
+    @NotEmpty(message = "POR FAVOR, INTRODUZCA LA LISTA DE URLS")
+    private List<String> url;
 
-    public String getUrl() {
-        return url;
-    }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
 }
