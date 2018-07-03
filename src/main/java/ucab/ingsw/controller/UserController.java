@@ -47,7 +47,7 @@ public class UserController {
         return userService.delete(command, id);
     }
 
-   @RequestMapping(value = "/search/{firstName}", consumes = "application/json", method = RequestMethod.GET)
+   @RequestMapping(value = "/search/{firstName}",  method = RequestMethod.GET)
      public List<User> searchByName(@PathVariable("firstName") String firstName) {
         return userService.searchByName(firstName);
     }
