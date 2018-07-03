@@ -4,10 +4,8 @@
 -"searchTerm"= TÉRMINO DE BÚSQUEDA
 
 -REQUEST TIPO POST (CONSEGUIR LA LISTA DE AMIGOS DE UN USUARIO)
--https://ing-software2018.herokuapp.com/user/friendsList
-{
- "id": "1530155000725" //EJEMPLO DEL CUERPO DEL POST
-}
+-https://ing-software2018.herokuapp.com/user/friendsList/"id_del_usuario"
+
 RETORNA UN JSON CON INFORMACIÓN DETALLADA SOBRE LOS AMIGOS DEL USUARIO
 
 -REQUEST TIPO POST (AGREGAR AMIGO)
