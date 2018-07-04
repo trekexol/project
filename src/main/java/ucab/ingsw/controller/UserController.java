@@ -57,9 +57,9 @@ public class UserController {
         return userService.addFriend(command);
     }
 
-    @RequestMapping(value = "/friendsList/{id}",  method = RequestMethod.GET)
-    public ResponseEntity<Object> getFriendsList(@PathVariable("id") String id) {
-        return userService.getFriendsList(id);
+    @RequestMapping(value = "/friendsList/{id}", consumes = "application/json", method = RequestMethod.POST)
+    public ResponseEntity<Object> getFriendsList(@Valid @RequestBody ListFriendCommand command,@PathVariable("id") String id) {
+        return userService.getFriendsList(command, id);
     }
 
     @RequestMapping(value = "/delete/friend", consumes = "application/json", method = RequestMethod.POST)
