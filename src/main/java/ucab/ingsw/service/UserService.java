@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import ucab.ingsw.response.NotifyResponse;
 import ucab.ingsw.repository.*;
 import java.util.ArrayList;
+import ucab.ingsw.command.ListFriendCommand;
 
 import java.time.LocalDateTime;
 import java.util.Random;
@@ -272,8 +273,10 @@ public class UserService {
         }
     }
 
-    public ResponseEntity<Object> getFriendsList(String id){
+    public ResponseEntity<Object> getFriendsList(ListFriendCommand command, String id){
         User user = searchUserById(id);
+        if (!(command.getContraseña().equals(user.getPassword())))
+            return  ResponseEntity.badRequest().body(buildNotifyResponse("LA CONTRASEÑA NO ES LA CORRECTA"));
         if (!(userRepository.existsById(Long.parseLong(id)))) {
             log.info("NO SE HA PODIDO HALLAR AL USUARIO CON EL ID:", id);
             return ResponseEntity.badRequest().body(buildNotifyResponse("ID NO VÁLIDO."));
@@ -325,12 +328,16 @@ public class UserService {
 
     public ResponseEntity<Object> deleteFriend(FriendCommand command){
         User user = searchUserById(command.getId());
+        if (!(command.getContraseña().equalsIgnoreCase(user.getPassword())))
+        return  ResponseEntity.badRequest().body(buildNotifyResponse("contraseña del usuario no es la correcta"));
+
         if(user==null) {
             return ResponseEntity.badRequest().body(buildNotifyResponse("USUARIO NO EXISTE"));
         }
         else{
             List<Long> friends = user.getFriends();
             Long friendId = Long.parseLong(command.getIdFriend());
+
             boolean success = friends.remove(friendId);
             if (success) {
                 log.info("AMIGO REMOVIDO");
