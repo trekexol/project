@@ -120,10 +120,16 @@ public class MediaService {
     }
 
 
-    public ResponseEntity<Object> deleteMedia(DeleteMediaCommand command, String id){
+   public ResponseEntity<Object> deleteMedia(DeleteMediaCommand command, String id, String idUser){
         Album album = albumService.searchAlbumById(id);
         Media media2 = searchMediaById(command.getMediaId());
-        if(album==null || media2==null || !album.getMedia().contains(media2) ){
+        User user = userService.searchUserById(idUser);
+        if (!(String.valueOf(album.getIdentificador()).equalsIgnoreCase(idUser))) return  ResponseEntity.badRequest().body(buildNotifyResponse("EL USUARIO NO ES EL DUEÑO DEL ALBUM"));
+        if (!(command.getPassword().equals(user.getPassword()))) return  ResponseEntity.badRequest().body(buildNotifyResponse("CONTRASEÑA NO VÁLIDA"));
+        if (album==null || media2==null){
+            return ResponseEntity.badRequest().body(buildNotifyResponse("EL ALBUM O MEDIA SON NULOS"));
+        }
+        if(!(album.getMedia().contains(media2.getId())) ){
             return ResponseEntity.badRequest().body(buildNotifyResponse("CREDENCIALES INVÁLIDAS"));
         }
         else{
@@ -132,11 +138,11 @@ public class MediaService {
                 log.info("MEDIA ={} ELIMINADA", command.getMediaId());
                 albumRepository.save(album);
                 mediaRepository.deleteById(Long.parseLong(command.getMediaId()));
-                return ResponseEntity.ok().body("PROCESO COMPLETADO CON ÉXITO");
+                return ResponseEntity.ok().body(buildNotifyResponse("MEDIA ELIMINADO"));
             }
             else{
-                log.error("ALBUM NO PUDO SER ELIMINADO");
-                return ResponseEntity.badRequest().body(buildNotifyResponse("ALBUM NO PUDO SER ELIMINADO"));
+                log.error("MEDIA NO PUDO SER ELIMINADA");
+                return ResponseEntity.badRequest().body(buildNotifyResponse("MEDIA NO PUDO SER ELIMINADA"));
             }
         }
     }
