@@ -27,9 +27,9 @@ public class MediaController {
             return mediaService.registerMedia(command,id);
         }
 
-    @RequestMapping(value = "/delete/{id}", consumes = "application/json", method = RequestMethod.POST)
-    public ResponseEntity delete(@Valid @RequestBody DeleteMediaCommand command, @PathVariable("id") String id) {
-        return mediaService.deleteMedia(command,id);
+   @RequestMapping(value = "/delete/{id}/{id2}", consumes = "application/json", method = RequestMethod.POST)
+    public ResponseEntity delete(@Valid @RequestBody DeleteMediaCommand command, @PathVariable("id") String id, @PathVariable("id2") String idUser) {
+        return mediaService.deleteMedia(command,id, idUser);
     }
 
     @RequestMapping(value = "/list/{id}", method = RequestMethod.GET)
